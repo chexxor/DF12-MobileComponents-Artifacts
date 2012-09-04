@@ -1,0 +1,10 @@
+<apex:page sidebar="false" showHeader="false" standardStylesheets="false" cache="false" doctype="html-5.0">
+
+    <c:App >
+        <c:Page name="LeadList" theme="touch">
+            <c:List sobject="Lead" labelField="Name" subLabelField="Phone" sortByField="Name" filter="following">
+            </c:List>
+        </c:Page>
+    </c:App>
+
+</apex:page>
