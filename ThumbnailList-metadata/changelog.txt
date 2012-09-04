@@ -1,0 +1,22 @@
+Changelog:
+
+- added
+classes/ThumbnailListController.cls
+components/ThumbnailList.component
+pages/ThumbnailList.page
+staticresources/MustacheJs.resource
+staticresources/MustacheJsMin.resource
+staticresources/ThumbnailListJS.resource
+staticresources/ThumbnailListRowItemTemplate.resource
+staticresources/jqmPageParams.resource
+staticresources/jqmPageParamsMin.resource
+
+
+- modified
+classes/AppController.cls - moving JS files
+components/App.component - add JS file
+staticresources/DetailComponentJS.resource - debugging
+
+
+
+NOTE: Changes logged by hand, so oversight is possible.
