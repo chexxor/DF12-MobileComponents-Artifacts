@@ -240,7 +240,6 @@ $V = Visualforce.Mobile;
         // 1) Store component element Id and its JS controller.
         // 2) Attach component to a page.
         // 3) Pull fields from component and save to config.
-        //TODO: Consider renaming config to compState.
         registerComponent = function(elemId, config) {
             var $parentPage, page, compCtlrFn, handlerFnExt, compCtlr;
             

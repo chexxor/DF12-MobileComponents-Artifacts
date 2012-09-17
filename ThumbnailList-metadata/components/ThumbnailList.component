@@ -25,12 +25,15 @@
     <apex:includeScript value="{!URLFOR($Resource[ICanHazJs])}"/>
     <apex:includeScript value="{!URLFOR($Resource.ThumbnailListRowItemTemplate)}"/>
     
+    
+    <!-- Root element of view -->
     <apex:outputPanel layout="inline" id="list">
        <ul data-role="listview" class="ui-listview" data-filter="{!listFilter}"></ul>
     </apex:outputPanel>
     
     
-
+    <!-- Register component JS with framework. -->
+    <!--   to ensure its stages are called when user navigates to this view. -->
     <script>$V.App.registerComponent('{!$Component.list}', {!configAsJson});</script>
     
 </apex:component>

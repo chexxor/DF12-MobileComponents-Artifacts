@@ -30,11 +30,14 @@
 //public class ListController extends SObjectController {
 public class ThumbnailListController {
     
+    // --------------------------
+    // Component state.
     private final static String THUMBNAIL_LIST_JS = 'ThumbnailListJS';
     private final static String MUSTACHE_JS = 'MustacheJs';
     private final static String I_CAN_HAZ_JS = 'ICanHaz';
     public ThumbnailListConfig config {get; set;}
     
+    // --------------------------
     // Parameter object to pass between JS controller and server controller.
     public virtual class ThumbnailListConfig {
 
@@ -52,12 +55,12 @@ public class ThumbnailListController {
         public String listItemStyleClass { get; set; }
         public String listDividerStyleClass { get; set; }
         public String nextPage { get; set; }
-        //public String serverCtlrName = SObject.getFullyQualifiedClassName(ListController.class);
         public String serverCtlrName = 'ThumbnailListController';
         public String jsCtlrName {get; set;}
     }
 
-    // constructors
+    // ----------------------------
+    // Constructors.
     public ThumbnailListController() {
         this.config = new ThumbnailListConfig();
     }
@@ -65,6 +68,8 @@ public class ThumbnailListController {
         this.config = config;
     }
 
+    // ----------------------------
+    // Javascript file name imports.
     public String getThumbnailListJS() {
         return this.config.debug ? THUMBNAIL_LIST_JS : (THUMBNAIL_LIST_JS + 'Min');
     }
@@ -83,26 +88,8 @@ public class ThumbnailListController {
         return configStr;
     }
     
-    /*
-    @RemoteAction
-    public static SObjectResponse invoke(ListRequest listRequest) {
-        ListController controller = new ListController(listRequest.getConfig());
-
-        return new SObjectResponse(controller.getDescribe().getSObjectType(), controller.getList(), DateTime.now());
-    }
-    */
-    
-    public class TestResponse {
-        public String testParam {get; set;}
-        public String testParam2 {get; set;}
-    }
-    
-    @RemoteAction
-    public static String getRecordsForConfigTest(TestResponse test) {
-        System.debug(' testing... ' + test);
-        return ' testing success!';
-    }
-    
+    // -----------------------------
+    // Apex methods that retrieve data and prepare it for display.
     @RemoteAction
     public static List<Sobject> getRecordsForConfig(ThumbnailListConfig config) {
         System.debug('--- config: ' + config);
@@ -121,6 +108,9 @@ public class ThumbnailListController {
         return recordList;
     }
     
+    
+    // Helper function to get records from the specified sObject with
+    //   the specified fields.
     public static List<Sobject> getRecords(
             String sObjectType,
             Set<String> fieldsToQuerySet,
@@ -141,66 +131,17 @@ public class ThumbnailListController {
         
         // Build the Where clause.
         queryString += ' WHERE ';
+        // Keep it simple for this example, only implement 'owner' filter.
         queryString += ' LastModifiedById = \'' + userId + '\'';
         
         System.debug('queryString: ' + queryString);
-        
+        //SELECT Name,Phone,FullPhotoUrl FROM User WHERE  LastModifiedById = '005E0000001qSc0IAE'
+        // Query and return records.
         recordList = Database.query(queryString);
+        System.debug('recordList: ' + recordList);
         
         return recordList;
     }
     
 
-
-/*
-    public List<SObject> getList() {
-        DescribeSObjectResult descInfo = this.getDescribe();
-        Map<String, SObjectField> fieldMap = descInfo.fields.getMap();
-        ListConfig config = (ListConfig)this.config;
-        
-        String soql = 'SELECT ';
-        String sortByFilter = '';
-
-        Set<String> fieldsToQuery = new Set<String>();
-        fieldsToQuery.add('id');
-        if (SchemaManager.isFieldAccessible(descInfo.getSobjectType(), getConfig().labelField))
-            fieldsToQuery.add(getConfig().labelField);
-
-        if (SchemaManager.isFieldAccessible(descInfo.getSobjectType(), getConfig().subLabelField))
-            fieldsToQuery.add(getConfig().subLabelField);
-
-        if (SchemaManager.isFieldAccessible(descInfo.getSobjectType(), getConfig().sortByField)) {
-            fieldsToQuery.add(getConfig().sortByField);
-            sortByFilter = (' ORDER BY ' + getConfig().sortByField);
-        }
-
-        for (String field : fieldsToQuery) soql += (field + ',');
-        soql = soql.subString(0, soql.length()-1);
-
-        soql += (' FROM ' + this.getName());
-        
-        String whereClause = '';
-
-        if (getConfig().filter != null && getConfig().filter.length() > 0) {
-            if (getConfig().filter.equalsIgnoreCase('owner')) soql += (' WHERE ownerId = \'' + UserInfo.getUserId() + '\'');
-            else if (this.isFeedEnabled() && getConfig().filter.equalsIgnoreCase('follower')) {
-                whereClause += (' Id IN (SELECT ParentId FROM EntitySubscription WHERE parent.type = \'' + this.getName() + '\'' +
-                                        ' AND SubscriberID = \'' + UserInfo.getUserId() + '\')');
-            }
-        }
-        if (config.filterClause != null && config.filterClause != '') {
-            whereClause += (whereClause != '') ? ' AND ' : '';
-            whereClause += config.filterClause;//REVIEWME: Worry about escaping this?
-        }
-        
-        if (whereClause.length() > 0) {
-            soql += ' WHERE ' + whereClause;
-        }
-        
-        soql += (sortByFilter + ' LIMIT 500'); // FIXME: reduce to much less, say 25 or 50, at most
-        System.debug('soql: ' + soql);
-
-        return Database.query(soql);
-    }
-    */
 }
