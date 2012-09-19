@@ -19,19 +19,10 @@
                     debug="true"/>
         </c:Content>
     </c:Page>
-    <c:Page name="userDetail"
-            theme="touch"
-            back="true"
-            debug="true">
-        <c:Header >
-            <h1 style="font-size: 20px; margin: 0px;">User Detail</h1>
-        </c:Header>
-        <c:Content >
-            <c:Detail sobject="User"
-                          debug="true"/>
-        </c:Content>
-    </c:Page>
 </c:App>
+
+
+
 <style>
     [data-role="panel"][data-id="main"] [data-role="page"].ui-page .ui-content {
         background: white;
