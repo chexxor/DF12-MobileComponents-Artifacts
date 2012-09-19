@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head> 
+    <title>My Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
+    
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.css" />
+    <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.js"></script>
+    <script src="{!URLFOR($Resource.MustacheJs)}"/><!-- Replace with own instance -->
+    
+    <script>
+    $(document).ready(function() {
+        // After the page is loaded, we need to fill the listview with items
+
+        // 1) Get list item data.
+        //fetchListItems('leadData.json', function(data) {
+        fetchListItems(null, function(data) {
+            console.log('data: ', data);
+                
+            // 2) Generate html from data.
+            var leadItemTempl = getLeadItemTemplate();
+            var listItemHtml = Mustache.to_html(leadItemTempl, data);
+
+            // 3) Paste it into the right place.
+            $('ul#leadList').html(listItemHtml);
+
+            // 4) Re-apply JQM styles.
+            $('ul#leadList').listview("refresh");
+        });
+
+    });
+
+    function fetchListItems(source, callback) {
+
+        if (!source) {
+            // Static list of names. Good for demo.
+            var jsonData = {
+                "Leads": [
+                    {FirstName: 'Hugo'},
+                    {FirstName: 'Youting'},
+                    {FirstName: 'Scott'},
+                    {FirstName: 'Melina'},
+                    {FirstName: 'Tulio'},
+                    {FirstName: 'Alex'}
+                ]
+            };
+            callback(jsonData);
+        }
+        // Send HTTP request for list of names.
+        else {
+            var data = {};
+            $.getJSON(
+                source,
+                data,
+                callback
+            );
+        }
+    }
+
+    function getLeadItemTemplate() {
+        return '{{#Leads}}<li><a href="#{{FirstName}}">{{FirstName}}</a></li>{{/Leads}}';
+    }
+    </script>
+
+</head>
+<body>
+
+<div data-role="page">
+
+    <div data-role="header">
+        <h1>Leads</h1>
+    </div><!-- /header -->
+
+    <div data-role="content">
+        <ul id="leadList" data-role="listview" data-inset="true" data-filter="true">
+        </ul>
+        
+        <!-- Make it look something like this...
+        <ul data-role="listview" data-inset="true" data-filter="true">
+            <li><a href="#">Hugo</a></li>
+            <li><a href="#">Youting</a></li>
+            <li><a href="#">Scott</a></li>
+            <li><a href="#">Melina</a></li>
+            <li><a href="#">Tulio</a></li>
+        </ul>
+        -->
+    </div><!-- /content -->
+
+</div><!-- /page -->
+</body>
+
+</html>
